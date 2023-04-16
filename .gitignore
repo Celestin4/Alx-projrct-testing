@@ -1,5 +1,6 @@
 personal_documentatiom.md
-.o
+*.o
 test_file.c
 main.c
 hsh.c
+/working
