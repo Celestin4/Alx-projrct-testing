@@ -7,7 +7,8 @@
 
 int main() {
     char command[MAX_COMMAND_LENGTH];
-    char *args[2];
+    
+        char *args[2];
     args[1] = NULL;
     
     while (1) {
@@ -31,7 +32,6 @@ int main() {
         if (execve(args[0], args, NULL) == -1) {
             perror("Error");
         }
-    }
-    
-    return 0;
+0;
+}
 }
