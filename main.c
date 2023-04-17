@@ -4,12 +4,11 @@
 #include <unistd.h>
 
 #define MAX_COMMAND_LENGTH 1024
+#define MAX_ARGS 64
 
 int main() {
     char command[MAX_COMMAND_LENGTH];
-    
-        char *args[2];
-    args[1] = NULL;
+    char *args[MAX_ARGS];
     
     while (1) {
         printf("$ ");
@@ -22,14 +21,21 @@ int main() {
         // remove newline character from input
         command[strcspn(command, "\n")] = '\0';
         
-        args[0] = strtok(command, " ");
+        int arg_count = 0;
+        char *token = strtok(command, " ");
+        while (token != NULL && arg_count < MAX_ARGS - 1) {
+            args[arg_count] = token;
+            arg_count++;
+            token = strtok(NULL, " ");
+        }
+        args[arg_count] = NULL;
         
-        if (args[0] == NULL) {
+        if (arg_count == 0) {
             // empty command line
             continue;
         }
         
-        if (execve(args[0], args, NULL) == -1) {
+        if (execvp(args[0], args) == -1) {
             perror("Error");
         }
 0;
