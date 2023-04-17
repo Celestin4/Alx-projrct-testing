@@ -7,6 +7,8 @@
 
 int main() {
     char command[MAX_COMMAND_LENGTH];
+    char *args[2];
+    args[1] = NULL;
     
     while (1) {
         printf("$ ");
@@ -19,7 +21,16 @@ int main() {
         // remove newline character from input
         command[strcspn(command, "\n")] = '\0';
         
-        printf("%s: No such file or directory\n", command);
+        args[0] = strtok(command, " ");
+        
+        if (args[0] == NULL) {
+            // empty command line
+            continue;
+        }
+        
+        if (execve(args[0], args, NULL) == -1) {
+            perror("Error");
+        }
     }
     
     return 0;
