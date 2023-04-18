@@ -38,6 +38,7 @@ int main() {
         if (execvp(args[0], args) == -1) {
             perror("Error");
         }
-0;
-}
+    }
+    
+    return 0;
 }
