@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
 #include <errno.h>
 
 #define MAX_COMMAND_LENGTH 1024
@@ -39,7 +38,8 @@ int main() {
             continue;
         }
         
-        char *path_token = strtok(path, ":");
+        char *path_copy = strdup(path); // create a copy of the PATH variable
+        char *path_token = strtok(path_copy, ":");
         while (path_token != NULL) {
             char path_command[MAX_COMMAND_LENGTH];
             snprintf(path_command, MAX_COMMAND_LENGTH, "%s/%s", path_token, args[0]);
@@ -57,6 +57,7 @@ int main() {
             }
             path_token = strtok(NULL, ":");
         }
+        free(path_copy); // free the memory allocated by strdup
     }
     
     return 0;
