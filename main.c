@@ -38,6 +38,11 @@ int main() {
             continue;
         }
         
+        // check if the command is "exit"
+        if (strcmp(args[0], "exit") == 0) {
+            exit(0);
+        }
+        
         char *path_copy = strdup(path); // create a copy of the PATH variable
         char *path_token = strtok(path_copy, ":");
         while (path_token != NULL) {
