@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
+
+#include <errno.h>
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
@@ -9,6 +12,7 @@
 int main() {
     char command[MAX_COMMAND_LENGTH];
     char *args[MAX_ARGS];
+    char *path = getenv("PATH");
     
     while (1) {
         printf("$ ");
@@ -35,8 +39,23 @@ int main() {
             continue;
         }
         
-        if (execvp(args[0], args) == -1) {
-            perror("Error");
+        char *path_token = strtok(path, ":");
+        while (path_token != NULL) {
+            char path_command[MAX_COMMAND_LENGTH];
+            snprintf(path_command, MAX_COMMAND_LENGTH, "%s/%s", path_token, args[0]);
+            if (access(path_command, X_OK) == 0) {
+                if (fork() == 0) {
+                    // child process
+                    execvp(path_command, args);
+                    perror("Error");
+                    exit(errno);
+                } else {
+                    // parent process
+                    wait(NULL);
+                    break;
+                }
+            }
+            path_token = strtok(NULL, ":");
         }
     }
     
