@@ -15,6 +15,10 @@
 // declaration of the 'environ' variable
 extern char **environ;
 
+char *my_strtok(char *str, const char *delim);
+int custom_getline(char **lineptr, size_t *n, FILE *stream);
+
+
 
 
 #endif /* SHELL_H */
