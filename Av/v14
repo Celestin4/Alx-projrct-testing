@@ -1,4 +1,92 @@
-#include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <errno.h>
+
+#define MAX_ARGS 64
+
+
+extern char **environ; // declare the environ variable
+
+int custom_getline(char **lineptr, size_t *n, FILE *stream) {
+    int c, i;
+    size_t len = 0;
+    char *line = *lineptr;
+
+    if (line == NULL || *n == 0) {
+        *lineptr = malloc(128);
+        if (*lineptr == NULL) {
+            return -1;
+        }
+        *n = 128;
+        line = *lineptr;
+    }
+
+    for (i = 0;; i++) {
+        c = fgetc(stream);
+
+        if (c == EOF) {
+            break;
+        }
+
+        if (len + 1 >= *n) {
+            *lineptr = realloc(*lineptr, *n + 128);
+            if (*lineptr == NULL) {
+                return -1;
+            }
+            *n += 128;
+            line = *lineptr + len;
+        }
+
+        line[i] = c;
+        len++;
+
+        if (c == '\n') {
+            break;
+        }
+    }
+
+    line[i] = '\0';
+
+    if (len == 0) {
+        return -1;
+    } else {
+        return len;
+    }
+}
+
+char *my_strtok(char *str, const char *delim) {
+    static char *last_token = NULL;
+    char *token = NULL;
+
+    if (str != NULL) {
+        last_token = str;
+    }
+
+    if (last_token == NULL) {
+        return NULL;
+    }
+
+    token = last_token;
+    while (*last_token != '\0') {
+        if (strchr(delim, *last_token) != NULL) {
+            *last_token++ = '\0';
+            break;
+        }
+        last_token++;
+    }
+
+    if (*token == '\0') {
+        return NULL;
+    } else {
+        return token;
+    }
+}
+
+
+
 
 int main() {
     char *path = getenv("PATH");
