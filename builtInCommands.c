@@ -10,5 +10,5 @@ void execute_unsetenv(){
 }
 
 void exit_shell() {
-    exit(0);
+    exit();
 }
