@@ -6,6 +6,7 @@ int custom_getline(char **lineptr, size_t *n, FILE *stream) {
     char *line = *lineptr;
 
     if (line == NULL || *n == 0) {
+        /* Allocate initial buffer */
         *lineptr = malloc(128);
         if (*lineptr == NULL) {
             return -1;
@@ -22,6 +23,7 @@ int custom_getline(char **lineptr, size_t *n, FILE *stream) {
         }
 
         if (len + 1 >= *n) {
+            /* Expand buffer if needed */
             *lineptr = realloc(*lineptr, *n + 128);
             if (*lineptr == NULL) {
                 return -1;
