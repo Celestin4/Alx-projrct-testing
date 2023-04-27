@@ -1,7 +1,6 @@
 #include "shell.h"
 
-
-
+/* function to tokenize a string */
 char *my_strtok(char *str, const char *delim) {
     static char *last_token = NULL;
     char *token = NULL;
@@ -24,6 +23,7 @@ char *my_strtok(char *str, const char *delim) {
     }
 
     if (*token == '\0') {
+        last_token = NULL;
         return NULL;
     } else {
         return token;

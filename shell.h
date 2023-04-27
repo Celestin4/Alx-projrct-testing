@@ -14,20 +14,23 @@
 #define MAX_COMMAND_LENGTH 1024
 /* declaration of the 'environ' variable */
 extern char **environ;
+char *alias_command;
+extern int arg_count;
+char *args[MAX_ARGS];
 
 /* function declarations */
 char *my_strtok(char *str, const char *delim);
 int custom_getline(char **lineptr, size_t *n, FILE *stream);
 void exit_shell();
-void execute_cd(char **args, int arg_count);
+void execute_cd();
 void execute_external_command(char **args, char *path);
 void execute_command(char *command, char *path);
 void execute_external_command(char **args, char *path);
-void execute_cd(char **args, int arg_count);
-void execute_setenv(char **args, int arg_count);
-void execute_unsetenv(char **args, int arg_count);
+void execute_setenv();
+void execute_unsetenv();
 void execute_alias(char **args, int arg_count);
 void add_alias(char *alias, char *command);
 char *get_alias(char *alias);
 
-#endif /* SHELL_H */
+
+#endif

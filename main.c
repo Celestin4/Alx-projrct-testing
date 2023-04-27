@@ -5,6 +5,8 @@ int main(void) {
     char *line = NULL;
     size_t line_size = 0;
     ssize_t line_length;
+    char *command;
+    
 
     while (1) {
         printf("$ ");
@@ -16,7 +18,7 @@ int main(void) {
         }
 
         /* split the line by semicolon */
-        char *command = strtok(line, ";");
+        command = strtok(line, ";");
         while (command != NULL) {
             execute_command(command, path);
             command = strtok(NULL, ";"); /* get the next command */
