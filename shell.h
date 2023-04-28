@@ -21,7 +21,6 @@ char *args[MAX_ARGS];
 /* function declarations */
 char *my_strtok(char *str, const char *delim);
 int custom_getline(char **lineptr, size_t *n, FILE *stream);
-void exit_shell();
 void execute_cd();
 void execute_external_command(char **args, char *path);
 void execute_command(char *command, char *path);

@@ -1,6 +1,6 @@
 #include "shell.h"
 
-
+ int exit_status = 0;
     int get_exit_status() {
     return 0;
     }
@@ -15,7 +15,7 @@ void execute_command(char *command, char *path) {
     while (token != NULL) {
         if (token[0] == '$') {
             if (strcmp(token, "$?") == 0) {
-                int exit_status = get_exit_status();
+               
                 char exit_status_str[16];
                 snprintf(exit_status_str, sizeof(exit_status_str), "%d", exit_status);
                 strcat(replaced_command, exit_status_str);
@@ -63,7 +63,7 @@ if (arg_count == 0) {
 }
 
 if (strcmp(args[0], "exit") == 0) {
-    exit_shell();
+    exit(0);
     return;
 } else if (strcmp(args[0], "cd") == 0) {
     execute_cd(args);
