@@ -9,3 +9,6 @@ void execute_setenv() {
 void execute_unsetenv(){
 }
 
+void exit_shell() {
+    exit();
+}
