@@ -1,27 +1,59 @@
-#include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
 
-int main(void) {
-    char *path = getenv("PATH");
-    char *line = NULL;
-    size_t line_size = 0;
-    ssize_t line_length;
-    char *command;
-    
+#define MAX_INPUT_SIZE 1024
+#define MAX_ARGS 64
+
+int main(int argc, char *argv[]) {
+    int interactive = 1;
+    char input[MAX_INPUT_SIZE];
+    char *args[MAX_ARGS];
+
+    if (argc > 1) {
+        interactive = 0;
+        strncpy(input, argv[1], MAX_INPUT_SIZE - 1);
+    }
 
     while (1) {
-        printf("$ ");
-
-        if ((line_length = custom_getline(&line, &line_size, stdin)) == -1) {
-            /* end of file reached or error reading input */
-            free(line);
-            exit(0);
+        char *token;
+        int i = 0;
+        pid_t pid;
+        
+        if (interactive) {
+            printf("myshell> ");
+            if (fgets(input, MAX_INPUT_SIZE, stdin) == NULL) {
+                break;
+            }
+            input[strcspn(input, "\n")] = '\0';
         }
 
-        /* split the line by semicolon */
-        command = strtok(line, ";");
-        while (command != NULL) {
-            execute_command(command, path);
-            command = strtok(NULL, ";"); /* get the next command */
+        
+        pid = fork();
+        if (pid < 0) {
+            perror("fork failed");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            token = strtok(input, " ");
+            while (token != NULL) {
+                args[i] = token;
+                token = strtok(NULL, " ");
+                i++;
+            }
+            args[i] = NULL;
+
+            execvp(args[0], args);
+            perror("execvp failed");
+            exit(EXIT_FAILURE);
+        } else {
+            wait(NULL);
         }
+
+        memset(input, 0, MAX_INPUT_SIZE);
+        memset(args, 0, sizeof(args));
     }
+
+    return 0;
 }
